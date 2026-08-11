@@ -35,7 +35,13 @@ jobs:
         working-directory: ./mobile/android
         run: chmod +x gradlew
 
-      - name: Build Debug APK
+      - name: Bundle React Native JS
+        working-directory: ./mobile
+        run: |
+          mkdir -p android/app/src/main/assets
+          npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/
+
+      - name: Build Standalone Debug APK
         working-directory: ./mobile/android
         run: ./gradlew assembleDebug --no-daemon
 
