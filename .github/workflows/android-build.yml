@@ -1,0 +1,47 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  workflow_dispatch: # Allows manual trigger from the Actions tab
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: 'mobile/package-lock.json'
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Install NPM Dependencies
+        working-directory: ./mobile
+        run: npm install
+
+      - name: Grant Execute Permission for Gradlew
+        working-directory: ./mobile/android
+        run: chmod +x gradlew
+
+      - name: Build Debug APK
+        working-directory: ./mobile/android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SmartFinance-App
+          path: mobile/android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 5
