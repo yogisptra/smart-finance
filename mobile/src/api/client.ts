@@ -2,7 +2,7 @@ import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { useAuthStore } from '../store';
 
-const API_URL = 'http://localhost:8000/api/v1';
+const API_URL = 'http://10.20.0.56:8000/api/v1';
 
 export const apiClient = axios.create({
   baseURL: API_URL,
